@@ -1,4 +1,16 @@
-![image](https://github.com/user-attachments/assets/b643b309-aaca-4f83-9566-c9307c86d3e7)This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This project is a mini HR Performance Dashboard application built with Next.js, React, and Tailwind CSS.
+
+Key Features:
+
+Employee Performance Visualization: It's designed to provide insights into HR performance, likely through various data visualizations and metrics.
+Bookmarks/Favorites: Users can bookmark or favorite specific elements within the dashboard for quick access and personalized tracking.
+Analytics Section: A dedicated section is included for more detailed analytics, suggesting the capability to display charts, graphs, or reports related to HR data.
+Modern UI with Tailwind CSS: The application leverages Tailwind CSS for a sleek, responsive, and easily customizable user interface.
+React Context for State Management: It utilizes React Context for efficient state management, specifically for handling bookmarks across different components.
+Authentication System: The dashboard includes a basic login page and route protection. Users must authenticate to access the main dashboard and other protected areas. This authentication system is implemented using a simple mock backend with state management handled by React Context, and session persistence via localStorage.
+Next.js App Router: The project is structured using Next.js's App Router, indicating modern server-side rendering capabilities (though the consolidated layout approach might shift some rendering to the client-side).
+
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 
