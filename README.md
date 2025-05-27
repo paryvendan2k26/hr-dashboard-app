@@ -1,6 +1,6 @@
-This project is a mini HR Performance Dashboard application built with Next.js, React, and Tailwind CSS.
+## This project is a mini HR Performance Dashboard application built with Next.js, React, and Tailwind CSS.
 
-Key Features:
+## Key Features:
 
 Employee Performance Visualization: It's designed to provide insights into HR performance, likely through various data visualizations and metrics.
 Bookmarks/Favorites: Users can bookmark or favorite specific elements within the dashboard for quick access and personalized tracking.
@@ -54,11 +54,15 @@ Login page
 
 Main HR dashboard
 ![image](https://github.com/user-attachments/assets/f9bf0bdf-3c04-4bef-b998-77b1157cd0ec)
+
 ![image](https://github.com/user-attachments/assets/5aeb1aff-fdb2-469d-82fb-733707044803)
+
 ![image](https://github.com/user-attachments/assets/68381839-7d79-4f0d-a7be-3edbf5ebdf2b)
+
 ![image](https://github.com/user-attachments/assets/98686ee1-70ac-48a3-95c5-c920414c3e03)
 
 ![image](https://github.com/user-attachments/assets/fa9a5113-63e1-4cb2-8955-2cd18971f44d)
+
 ![image](https://github.com/user-attachments/assets/89b8dab4-fed7-47d7-8525-3c6f9507c22e)
 
 Adding Employees
@@ -71,6 +75,7 @@ Bookmarks
 
 Analytics
 ![image](https://github.com/user-attachments/assets/d7414222-0173-4ad9-bd53-ec2bceca94be)
+
 ![image](https://github.com/user-attachments/assets/714223f8-839d-443c-b625-4feaf404b2ff)
 
 
