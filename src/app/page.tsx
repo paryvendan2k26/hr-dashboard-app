@@ -5,7 +5,7 @@ import { UserCard } from '../../components/UserCard';
 import { SearchFilter } from '../../components/SearchFilter';
 import { CreateUserModal } from '../../components/CreateUserModal';
 import { useState, useEffect, useCallback } from 'react';
-import { FaPlus, FaSpinner, FaUsersSlash, FaCheckCircle, FaArrowRight } from 'react-icons/fa';
+import { FaPlus, FaSpinner, FaUsersSlash, FaArrowRight, FaCheckCircle } from 'react-icons/fa'; // FaCheckCircle is used below
 
 // Define the type for a user, as received from dummyjson
 interface User {
@@ -26,18 +26,18 @@ const getMockRatingForUser = (userId: number) => {
   return (userId % 5) + 1;
 };
 
-// Helper for rendering stars using react-icons - consistent with SearchFilter and UserCard
-import { FaStar, FaRegStar } from 'react-icons/fa';
+// REMOVED: renderStars helper function and its related import
+// import { FaStar, FaRegStar } from 'react-icons/fa'; // This import is no longer needed here
 
-const renderStars = (rating: number) => {
-  return (
-    <div className="flex text-yellow-400">
-      {Array.from({ length: 5 }, (_, i) => (
-        i < rating ? <FaStar key={i} className="h-5 w-5" /> : <FaRegStar key={i} className="h-5 w-5" />
-      ))}
-    </div>
-  );
-};
+// const renderStars = (rating: number) => {
+//   return (
+//     <div className="flex text-yellow-400">
+//       {Array.from({ length: 5 }, (_, i) => (
+//         i < rating ? <FaStar key={i} className="h-5 w-5" /> : <FaRegStar key={i} className="h-5 w-5" />
+//       ))}
+//     </div>
+//   );
+// };
 
 
 async function fetchUsers(limit: number, skip: number): Promise<{ users: User[], total: number }> {
@@ -183,7 +183,7 @@ export default function HomePage() {
           onFilterDepartment={setSelectedDepartments}
           onFilterRating={setSelectedRatings}
           allDepartments={allDepartments}
-          renderStars={renderStars}
+          // The `renderStars` prop is no longer needed here as SearchFilter handles its own star rendering.
           selectedDepartments={selectedDepartments}
           selectedRatings={selectedRatings}
         />
@@ -252,7 +252,10 @@ export default function HomePage() {
         )}
 
         {!hasMore && !initialLoading && filteredUsers.length > 0 && (
-            <p className="text-center text-neutral-dark text-sm mt-4">You have reached the end of the employee list.</p>
+            <div className="text-center mt-12 py-4 text-gray-500 text-md flex items-center justify-center">
+                <FaCheckCircle className="mr-2 text-green-500 text-xl" /> {/* FaCheckCircle used here */}
+                You have reached the end of the employee list. All available employees are displayed.
+            </div>
         )}
 
         <CreateUserModal
