@@ -7,7 +7,7 @@ interface SearchFilterProps {
   onFilterDepartment: (departments: string[]) => void;
   onFilterRating: (ratings: number[]) => void;
   allDepartments: string[];
-  renderStars: (rating: number) => JSX.Element; // Expect renderStars prop (e.g., from UserCard's logic)
+  // renderStars: (rating: number) => JSX.Element; // REMOVE THIS LINE
   selectedDepartments: string[];
   selectedRatings: number[];
 }
@@ -17,7 +17,7 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
   onFilterDepartment,
   onFilterRating,
   allDepartments,
-  renderStars,
+  // renderStars, // REMOVE THIS LINE
   selectedDepartments,
   selectedRatings,
 }) => {
@@ -78,7 +78,7 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
                   onClick={() => handleDepartmentClick(department)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ease-in-out
                     ${selectedDepartments.includes(department)
-                      ? 'bg-indigo-600 text-white shadow-md hover:bg-indigo-700' // Stronger selected state
+                      ? 'bg-indigo-600 text-white shadow-md hover:bg-indigo-700'
                       : 'bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200'
                     }`}
                 >
@@ -103,16 +103,11 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
                 onClick={() => handleRatingClick(rating)}
                 className={`flex items-center px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ease-in-out
                   ${selectedRatings.includes(rating)
-                    ? 'bg-indigo-600 text-white shadow-md hover:bg-indigo-700' // Stronger selected state
+                    ? 'bg-indigo-600 text-white shadow-md hover:bg-indigo-700'
                     : 'bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200'
                   }`}
               >
-                {/* Use the provided renderStars prop, but wrap it for consistent icon sizing/alignment */}
                 <span className="flex items-center text-lg leading-none">
-                   {/* Here, we manually render stars to ensure consistent sizing within the button.
-                       You can choose to still use `renderStars(rating)` if its output is visually compatible.
-                       For explicit control here, I'll use FaStar/FaRegStar directly for the buttons.
-                   */}
                    {Array.from({ length: rating }, (_, i) => (
                       <FaStar key={i} className="text-yellow-400" />
                    ))}

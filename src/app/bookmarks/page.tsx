@@ -19,7 +19,7 @@ export default function BookmarksPage() {
           <div className="text-center bg-blue-50 border border-blue-200 text-blue-800 p-8 rounded-lg max-w-2xl mx-auto shadow-sm">
             <FaRegBookmark className="text-blue-500 text-5xl mb-4 mx-auto" />
             <p className="text-lg mb-4 font-medium">
-              It looks like you haven't bookmarked any employees yet.
+              It looks like you have not bookmarked any employees yet.
             </p>
             <p className="text-md text-blue-700 mb-6">
               Bookmarks allow you to quickly access your favorite employee profiles.

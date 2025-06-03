@@ -1,178 +1,93 @@
-// src/app/employee/[id]/page.tsx
-'use client'; // ADD THIS LINE at the very top
+// src/app/bookmarks/page.tsx
+'use client';
 
+import { useBookmarks } from '../../../../context/BookmarkContext'; // CORRECTED PATH
 import Link from 'next/link';
+import { FaInfoCircle, FaRegBookmark, FaArrowUp, FaArrowLeft, FaTrashAlt } from 'react-icons/fa';
 
-// Define the detailed type for a user, as received from dummyjson
-interface UserDetails {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  age: number;
-  phone: string;
-  address: {
-    address: string;
-    city: string;
-    state: string;
-    postalCode: string;
-  };
-  company: {
-    department: string;
-    title: string;
-    name: string; // Company name
-  };
-  bloodGroup: string;
-  gender: string;
-  birthDate: string;
-  image: string; // User image URL
-  // Add more fields from dummyjson user object as needed
-}
-
-// Client-side function to fetch details for a single user by ID
-// This function needs to be defined outside the component or memoized if it were a server component
-// but since the page is now 'use client', it's fine as a regular async function inside.
-async function getUserDetails(id: string): Promise<UserDetails> {
-  try {
-    const res = await fetch(`https://dummyjson.com/users/${id}`);
-    if (!res.ok) {
-      throw new Error(`Failed to fetch user details for ID ${id}: ${res.statusText}`);
-    }
-    return res.json();
-  } catch (error) {
-    console.error(`Error fetching user details for ID ${id}:`, error);
-    throw error;
-  }
-}
-
-// Mock data for past performance history (for demonstration)
-const mockPastPerformance = [
-  { id: 1, date: '2024-01-15', score: 4.5, notes: 'Exceeded Q1 targets, strong leadership.' },
-  { id: 2, date: '2023-07-20', score: 4.0, notes: 'Consistent performance, good team player.' },
-  { id: 3, date: '2023-01-10', score: 3.8, notes: 'Met expectations, areas for growth identified.' },
-];
-
-// Helper function to determine performance badge color based on rating
-const getPerformanceBadgeColor = (rating: number) => {
-  if (rating >= 4.5) return 'bg-green-600';
-  if (rating >= 4.0) return 'bg-green-500';
-  if (rating >= 3.5) return 'bg-yellow-500';
-  return 'bg-red-500';
-};
-
-// Helper for a quick mock rating (1-5 stars) - for current performance display
-const getMockCurrentRating = () => Math.floor(Math.random() * 5) + 1;
-
-
-// Dynamic Employee Details Page component
-// Now that this is a client component, you'll need to fetch data within useEffect or use a client-side data fetching library
-// For simplicity in this sprint, we'll keep the async direct call, but remember it will execute on initial load client-side.
-// If you need server-side rendering for the initial data, you'd fetch in a separate Server Component and pass props.
-import { useEffect, useState } from 'react'; // Import useEffect and useState for client-side data fetching
-
-export default function EmployeeDetailsPage({ params }: { params: { id: string } }) {
-  const [user, setUser] = useState<UserDetails | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function loadUser() {
-      try {
-        setLoading(true);
-        const userData = await getUserDetails(params.id);
-        setUser(userData);
-      } catch (err: any) {
-        setError(err.message || "Failed to load user details.");
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadUser();
-  }, [params.id]); // Re-run when the ID changes
-
-  if (loading) {
-    return <div className="text-center text-xl text-gray-700 mt-10">Loading employee details...</div>;
-  }
-
-  if (error) {
-    return <div className="text-center text-xl text-red-600 mt-10">Error: {error}</div>;
-  }
-
-  if (!user) {
-    return <div className="text-center text-xl text-gray-700 mt-10">Employee not found.</div>;
-  }
-
-  const currentMockRating = getMockCurrentRating(); // Get a mock current rating
+export default function BookmarksPage() {
+  const { bookmarks, removeBookmark } = useBookmarks();
 
   return (
-    <div className="p-6 bg-white shadow-xl rounded-lg">
-      <div className="flex flex-col md:flex-row items-center md:items-start mb-6">
-        <img
-          src={user.image || `https://placehold.co/128x128/aabbcc/ffffff?text=${user.firstName[0]}${user.lastName[0]}`}
-          alt={`${user.firstName} ${user.lastName}`}
-          className="w-32 h-32 rounded-full object-cover border-4 border-blue-400 shadow-md mb-4 md:mb-0 md:mr-6"
-          onError={(e) => { e.currentTarget.src = `https://placehold.co/128x128/aabbcc/ffffff?text=${user.firstName[0]}${user.lastName[0]}`; }}
-        />
-        <div className="text-center md:text-left">
-          <h1 className="text-4xl font-extrabold text-gray-800">{user.firstName} {user.lastName}</h1>
-          <p className="text-xl text-blue-600 font-medium">{user.company.title} at {user.company.name}</p>
-          <div className="mt-3 flex items-center justify-center md:justify-start">
-            <span className="font-semibold text-gray-700 mr-2">Current Performance:</span>
-            <span className={`px-4 py-1 rounded-full text-white font-bold ${getPerformanceBadgeColor(currentMockRating)} shadow-sm`}>
-              {'⭐'.repeat(currentMockRating)} ({currentMockRating} stars)
-            </span>
+    <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto bg-white shadow-xl rounded-xl p-8 lg:p-12 border border-gray-100">
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-800 mb-8 text-center leading-tight">
+          Your Bookmarked Employees
+        </h1>
+
+        {bookmarks.length === 0 ? (
+          <div className="text-center bg-blue-50 border border-blue-200 text-blue-800 p-8 rounded-lg max-w-2xl mx-auto shadow-sm">
+            <FaRegBookmark className="text-blue-500 text-5xl mb-4 mx-auto" />
+            <p className="text-lg mb-4 font-medium">
+              It looks like you have not bookmarked any employees yet.
+            </p>
+            <p className="text-md text-blue-700 mb-6">
+              Bookmarks allow you to quickly access your favorite employee profiles.
+            </p>
+            <Link
+              href="/"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-semibold rounded-full shadow-sm
+                         text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+                         transition-all duration-200 ease-in-out"
+            >
+              <FaArrowLeft className="mr-2 -ml-1" /> Explore Employees
+            </Link>
           </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {/* Contact Information */}
-        <div className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-3 border-b pb-2">Contact Information</h2>
-          <p className="text-gray-700 mb-2"><strong className="font-medium">Email:</strong> {user.email}</p>
-          <p className="text-gray-700 mb-2"><strong className="font-medium">Phone:</strong> {user.phone}</p>
-          <p className="text-gray-700 mb-2"><strong className="font-medium">Address:</strong> {user.address.address}, {user.address.city}, {user.address.state} {user.address.postalCode}</p>
-        </div>
-
-        {/* Personal Details */}
-        <div className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-3 border-b pb-2">Personal Details</h2>
-          <p className="text-gray-700 mb-2"><strong className="font-medium">Age:</strong> {user.age}</p>
-          <p className="text-gray-700 mb-2"><strong className="font-medium">Gender:</strong> {user.gender}</p>
-          <p className="text-gray-700 mb-2"><strong className="font-medium">Date of Birth:</strong> {user.birthDate}</p>
-          <p className="text-gray-700 mb-2"><strong className="font-medium">Blood Group:</strong> {user.bloodGroup}</p>
-        </div>
-      </div>
-
-      {/* Past Performance History */}
-      <div className="mb-8 p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-3 border-b pb-2">Past Performance History</h2>
-        {mockPastPerformance.map(p => (
-          <div key={p.id} className="mb-3 p-3 border border-gray-200 bg-white rounded-md last:mb-0">
-            <p className="text-gray-800"><strong>Date:</strong> {p.date}</p>
-            <p className="text-gray-800"><strong>Score:</strong> {p.score}</p>
-            <p className="text-gray-800"><strong>Notes:</strong> {p.notes}</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {bookmarks.map((bookmark) => (
+              <div
+                key={bookmark.id}
+                className="border border-gray-200 p-5 rounded-lg shadow-md bg-gradient-to-br from-white to-gray-50
+                           flex flex-col justify-between hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+              >
+                <div>
+                  <h2 className="text-xl font-bold text-gray-800 mb-2 leading-tight">
+                    {bookmark.firstName} {bookmark.lastName}
+                  </h2>
+                  <p className="text-gray-600 text-sm">Employee ID: <span className="font-medium text-gray-700">{bookmark.id}</span></p>
+                </div>
+                <div className="mt-5 pt-4 border-t border-gray-100 flex flex-wrap gap-3 justify-end">
+                  <Link
+                    href={`/employee/${bookmark.id}`}
+                    className="flex items-center bg-indigo-100 text-indigo-700 px-4 py-2 rounded-full text-sm font-medium
+                               hover:bg-indigo-200 transition duration-200 shadow-sm"
+                  >
+                    <FaInfoCircle className="mr-2" /> Details
+                  </Link>
+                  <button
+                    onClick={() => removeBookmark(bookmark.id)}
+                    className="flex items-center bg-red-100 text-red-700 px-4 py-2 rounded-full text-sm font-medium
+                               hover:bg-red-200 transition duration-200 shadow-sm"
+                  >
+                    <FaTrashAlt className="mr-2" /> Remove
+                  </button>
+                  <button
+                    className="flex items-center bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-sm font-medium
+                               hover:bg-purple-200 transition duration-200 shadow-sm"
+                  >
+                    <FaArrowUp className="mr-2" /> Promote
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        )}
 
-      {/* Tabbed UI Placeholder */}
-      <div className="mb-8 p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-3 border-b pb-2">Additional Information (Tabs)</h2>
-        <div className="flex flex-wrap gap-2 mb-4">
-          <button className="px-4 py-2 bg-blue-100 text-blue-800 font-medium rounded-md hover:bg-blue-200 transition-colors duration-150">Overview</button>
-          <button className="px-4 py-2 bg-gray-100 text-gray-800 font-medium rounded-md hover:bg-gray-200 transition-colors duration-150">Projects</button>
-          <button className="px-4 py-2 bg-gray-100 text-gray-800 font-medium rounded-md hover:bg-gray-200 transition-colors duration-150">Feedback</button>
-        </div>
-        <div className="border border-gray-200 p-4 rounded-md bg-white text-gray-700">
-          <p>Content for the selected tab would load dynamically here. For this sprint, this is a placeholder.</p>
-        </div>
+        {/* Back to Dashboard Button (only if bookmarks exist, or always displayed clearly) */}
+        {bookmarks.length > 0 && (
+          <div className="mt-12 text-center">
+            <Link
+              href="/"
+              className="inline-flex items-center px-8 py-3 border border-gray-300 text-base font-semibold rounded-full shadow-md
+                         text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300
+                         transition-all duration-200 ease-in-out"
+            >
+              <FaArrowLeft className="mr-2" /> Back to Dashboard
+            </Link>
+          </div>
+        )}
       </div>
-
-      {/* Back to Dashboard Link */}
-      <Link href="/" className="inline-block bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 transition-colors duration-200 text-lg font-medium shadow-md">
-        ← Back to Dashboard
-      </Link>
     </div>
   );
 }

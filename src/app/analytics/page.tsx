@@ -2,32 +2,32 @@
 'use client';
 
 import Link from 'next/link';
-// Import Chart.js components and necessary registers
-import { Bar, Pie, Line } from 'react-chartjs-2'; // Added Line
+import { Bar, Pie, Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
   ArcElement,
-  PointElement, // Added for Line chart
-  LineElement,  // Added for Line chart
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
+  ChartData, // Re-import ChartData type
+  ChartOptions, // Re-import ChartOptions type
+  TooltipItem, // Still useful for tooltip callbacks
 } from 'chart.js';
 
-// Import icons for KPIs and navigation
-import { FaUsers, FaBirthdayCake, FaBookmark, FaChartBar, FaChartPie, FaChartLine, FaArrowLeft } from 'react-icons/fa';
+import { FaUsers, FaBirthdayCake, FaBookmark, FaChartBar, FaArrowLeft } from 'react-icons/fa';
 
-// Register the necessary Chart.js components globally
 ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
   ArcElement,
-  PointElement, // Register PointElement
-  LineElement,  // Register LineElement
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend
@@ -37,9 +37,7 @@ export default function AnalyticsPage() {
   // --- Professional Color Palette for Charts ---
   const primaryChartColor = 'rgba(79, 70, 229, 0.7)'; // Indigo-600 with opacity
   const primaryChartBorder = 'rgba(79, 70, 229, 1)';
-  const secondaryChartColor = 'rgba(16, 185, 129, 0.7)'; // Emerald-500 with opacity
-  const secondaryChartBorder = 'rgba(16, 185, 129, 1)';
-  const accentChartColors = [ // More diverse colors for Pie/Bar charts
+  const accentChartColors = [
     'rgba(99, 102, 241, 0.8)', // Indigo-500
     'rgba(34, 197, 94, 0.8)',  // Green-500
     'rgba(249, 115, 22, 0.8)', // Orange-500
@@ -87,16 +85,14 @@ export default function AnalyticsPage() {
   ];
 
   // --- Key Performance Indicators (KPIs) ---
-  const totalEmployees = mockEmployeeAgeDistribution.reduce((sum, item) => sum + item.count, 0) +
-                         mockEmployeeGenderDistribution.reduce((sum, item) => sum + item.count, 0) -
-                         mockEmployeeGenderDistribution.find(d => d.gender === 'Other')?.count || 0; // rough estimation
+  const totalEmployees = mockEmployeeAgeDistribution.reduce((sum, item) => sum + item.count, 0);
   const totalBookmarks = mockBookmarkTrends.reduce((sum, item) => sum + item.count, 0);
   const averageEmployeeAge = '35.2'; // Mock average for display
 
   // --- Chart Data & Options ---
 
   // Department-wise Average Performance Ratings (Bar Chart)
-  const departmentData = {
+  const departmentData: ChartData<'bar'> = { // Explicitly type ChartData
     labels: mockDeptRatings.map(data => data.department),
     datasets: [
       {
@@ -105,14 +101,14 @@ export default function AnalyticsPage() {
         backgroundColor: accentChartColors.slice(0, mockDeptRatings.length),
         borderColor: accentChartBorders.slice(0, mockDeptRatings.length),
         borderWidth: 1,
-        borderRadius: 5, // Rounded bars
+        borderRadius: 5,
       },
     ],
   };
 
-  const departmentOptions = {
+  const departmentOptions: ChartOptions<'bar'> = { // Explicitly type ChartOptions
     responsive: true,
-    maintainAspectRatio: false, // Allows height control
+    maintainAspectRatio: false,
     plugins: {
       title: {
         display: true,
@@ -129,7 +125,7 @@ export default function AnalyticsPage() {
         bodyFont: { size: 14 },
         titleFont: { size: 16, weight: 'bold' },
         callbacks: {
-          label: (context: any) => `${context.dataset.label}: ${context.parsed.y.toFixed(1)} Stars`,
+          label: (context: TooltipItem<'bar'>) => `${context.dataset.label}: ${context.parsed.y.toFixed(1)} Stars`,
         },
       },
     },
@@ -160,16 +156,16 @@ export default function AnalyticsPage() {
   };
 
   // Bookmark Trends (Line Chart)
-  const bookmarkTrendsData = {
+  const bookmarkTrendsData: ChartData<'line'> = { // Explicitly type ChartData
     labels: mockBookmarkTrends.map(data => data.month),
     datasets: [
       {
         label: 'Number of Bookmarks',
         data: mockBookmarkTrends.map(data => data.count),
-        fill: true, // Fill area under the line
-        backgroundColor: primaryChartColor.replace('0.7', '0.2'), // Lighter fill
+        fill: true,
+        backgroundColor: primaryChartColor.replace('0.7', '0.2'),
         borderColor: primaryChartBorder,
-        tension: 0.4, // Smooth curve
+        tension: 0.4,
         pointBackgroundColor: primaryChartBorder,
         pointBorderColor: '#fff',
         pointHoverBackgroundColor: '#fff',
@@ -178,7 +174,7 @@ export default function AnalyticsPage() {
     ],
   };
 
-  const bookmarkTrendsOptions = {
+  const bookmarkTrendsOptions: ChartOptions<'line'> = { // Explicitly type ChartOptions
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -199,7 +195,7 @@ export default function AnalyticsPage() {
         bodyFont: { size: 14 },
         titleFont: { size: 16, weight: 'bold' },
         callbacks: {
-          label: (context: any) => `${context.dataset.label}: ${context.parsed.y} Bookmarks`,
+          label: (context: TooltipItem<'line'>) => `${context.dataset.label}: ${context.parsed.y} Bookmarks`,
         },
       },
     },
@@ -229,16 +225,16 @@ export default function AnalyticsPage() {
   };
 
   // Employee Gender Distribution (Pie Chart)
-  const genderData = {
+  const genderData: ChartData<'pie'> = { // Explicitly type ChartData
     labels: mockEmployeeGenderDistribution.map(data => data.gender),
     datasets: [
       {
         label: 'Number of Employees',
         data: mockEmployeeGenderDistribution.map(data => data.count),
         backgroundColor: [
-          accentChartColors[0], // Male
-          accentChartColors[1], // Female
-          accentChartColors[2], // Other
+          accentChartColors[0],
+          accentChartColors[1],
+          accentChartColors[2],
         ],
         borderColor: accentChartBorders.slice(0, 3),
         borderWidth: 1,
@@ -246,7 +242,7 @@ export default function AnalyticsPage() {
     ],
   };
 
-  const genderOptions = {
+  const genderOptions: ChartOptions<'pie'> = { // Explicitly type ChartOptions
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -266,7 +262,7 @@ export default function AnalyticsPage() {
         bodyFont: { size: 14 },
         titleFont: { size: 16, weight: 'bold' },
         callbacks: {
-          label: (context: any) => {
+          label: (context: TooltipItem<'pie'>) => { // Explicitly type context
             const label = context.label || '';
             const value = context.parsed;
             const total = context.dataset.data.reduce((acc: number, val: number) => acc + val, 0);
@@ -279,7 +275,7 @@ export default function AnalyticsPage() {
   };
 
   // Employee Age Distribution (Bar Chart)
-  const ageData = {
+  const ageData: ChartData<'bar'> = { // Explicitly type ChartData
     labels: mockEmployeeAgeDistribution.map(data => data.range),
     datasets: [
       {
@@ -293,7 +289,7 @@ export default function AnalyticsPage() {
     ],
   };
 
-  const ageOptions = {
+  const ageOptions: ChartOptions<'bar'> = { // Explicitly type ChartOptions
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -312,7 +308,7 @@ export default function AnalyticsPage() {
         bodyFont: { size: 14 },
         titleFont: { size: 16, weight: 'bold' },
         callbacks: {
-          label: (context: any) => `${context.dataset.label}: ${context.parsed.y} employees`,
+          label: (context: TooltipItem<'bar'>) => `${context.dataset.label}: ${context.parsed.y} employees`,
         },
       },
     },
